@@ -4,173 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Broken Melodies</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;400;500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
-            --accent-color: #ff6b6b;
-            --accent-glow: #ff4757;
-            --verified-color: #1DA1F2;
-            --text-main: #ffffff;
-            --text-muted: rgba(255, 255, 255, 0.6);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #050505;
-            min-height: 100vh;
-            color: var(--text-main);
-            display: flex; justify-content: center; align-items: center;
-            padding: 20px 10px; overflow-x: hidden; position: relative;
-        }
-
-        /* --- SCROLL ANIMATION --- */
-        .hidden-element {
-            opacity: 0; transform: translateY(50px);
-            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-        .show-element { opacity: 1; transform: translateY(0); }
-
-        /* --- BACKGROUND ORBS --- */
-        .bg-orb {
-            position: fixed; border-radius: 50%; filter: blur(80px);
-            z-index: -1; opacity: 0.6; animation: floatOrb 10s infinite alternate ease-in-out;
-        }
-        .orb-1 { width: 400px; height: 400px; background: #4a1c25; top: -50px; left: -50px; }
-        .orb-2 { width: 350px; height: 350px; background: #1a1a2e; bottom: -50px; right: -50px; animation-delay: -5s; }
-        @keyframes floatOrb { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, 30px) scale(1.1); } }
-
-        /* --- PRELOADER --- */
-        #preloader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #050505; z-index: 9999; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s; 
-        }
-        .hide-loader { opacity: 0 !important; visibility: hidden; pointer-events: none; }
-
-        .guitar-wrapper { position: relative; width: 120px; height: 120px; display: flex; justify-content: center; align-items: center; margin-bottom: 25px; }
-        .main-guitar { 
-            font-size: 5rem; color: white; z-index: 2; 
-            text-shadow: 0 0 20px var(--accent-glow), 0 0 40px var(--accent-color); 
-            transform-origin: bottom center; animation: rockAndFloat 2s ease-in-out infinite; 
-        }
-        .music-note { position: absolute; font-size: 1.5rem; color: var(--accent-color); opacity: 0; z-index: 1; text-shadow: 0 0 10px var(--accent-color); }
-        .note-1 { left: 10px; animation: floatNote 2s infinite 0s; }
-        .note-2 { right: 10px; animation: floatNote 2s infinite 0.7s; font-size: 1.2rem; }
-        .note-3 { left: 50%; top: -20px; animation: floatNote 2s infinite 1.4s; font-size: 1rem; }
-        .loading-text { 
-            font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: white; letter-spacing: 2px; 
-            animation: textBreath 1.5s ease-in-out infinite alternate; 
-        }
-
-        @keyframes rockAndFloat { 0% { transform: rotate(-10deg) translateY(0); } 50% { transform: rotate(10deg) translateY(-10px); } 100% { transform: rotate(-10deg) translateY(0); } }
-        @keyframes floatNote { 0% { transform: translateY(20px) rotate(0deg); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-40px) rotate(20deg); opacity: 0; } }
-        @keyframes textBreath { 0% { text-shadow: 0 0 5px rgba(255,255,255,0.2); opacity: 0.5; } 100% { text-shadow: 0 0 20px var(--accent-color); opacity: 1; } }
-
-        /* --- MAIN CONTAINER --- */
-        .main-container {
-            width: 100%; max-width: 900px;
-            background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(40px) saturate(150%); -webkit-backdrop-filter: blur(40px) saturate(150%);
-            border: var(--glass-border); border-top: 1px solid rgba(255,255,255,0.15);
-            box-shadow: var(--glass-shadow); border-radius: 40px; padding: 40px 25px; text-align: center;
-            opacity: 0; filter: blur(20px); transform: scale(1.1); 
-        }
-        .show-content { animation: blurZoomOut 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important; }
-        @keyframes blurZoomOut { 0% { opacity: 0; filter: blur(20px); transform: scale(1.1); } 100% { opacity: 1; filter: blur(0); transform: scale(1); } }
-
-        header { margin-bottom: 30px; }
-        h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 600; text-transform: uppercase; letter-spacing: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #ffffff; text-shadow: none; }
-        
-        /* CHANGED: New Font Style for Subtitle */
-        .project-subtitle {
-            font-family: 'Montserrat', sans-serif; /* Clean, modern font */
-            font-size: 0.9rem;
-            font-weight: 400;
-            color: var(--accent-color);
-            margin-top: 5px;
-            display: inline-block;
-            text-transform: uppercase;
-            letter-spacing: 6px; /* Wide spacing for cinematic look */
-            text-shadow: 0 0 10px rgba(255, 107, 107, 0.4);
-            margin-bottom: 25px;
-        }
-
-        /* --- ARTIST SECTION --- */
-        .artist-section { background: rgba(255,255,255,0.03); border-radius: 30px; padding: 25px; margin-bottom: 40px; border: var(--glass-border); display: flex; flex-direction: column; align-items: center; box-shadow: inset 0 0 20px rgba(255,255,255,0.02); }
-        .artist-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.2); margin-bottom: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        .artist-name-display { font-size: 1.5rem; font-weight: 500; margin-bottom: 15px; letter-spacing: 2px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 8px; }
-        .verified-icon { color: var(--verified-color); font-size: 1.1rem; filter: drop-shadow(0 0 5px rgba(29, 161, 242, 0.5)); }
-        .artist-socials { display: flex; gap: 20px; }
-        .social-btn { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.8); font-size: 1.1rem; text-decoration: none; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s ease; }
-        .social-btn:hover { background: white; color: black; box-shadow: 0 0 15px white; transform: translateY(-3px); }
-
-        .explore-heading { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 25px; position: relative; display: inline-block; color: rgba(255,255,255,0.8); }
-        .explore-heading::after { content: ''; display: block; width: 40px; height: 2px; background: var(--accent-color); margin: 10px auto 0; box-shadow: 0 0 10px var(--accent-color); }
-
-        /* --- GRID --- */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; margin-bottom: 50px; align-items: stretch; }
-        .song-card { background: rgba(255, 255, 255, 0.03); border-radius: 20px; padding: 18px; border: 1px solid rgba(255, 255, 255, 0.08); display: flex; flex-direction: column; justify-content: space-between; height: 100%; position: relative; transform-style: preserve-3d; transform: perspective(1000px); }
-        .song-card:hover { border-color: rgba(255, 255, 255, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05); }
-        .album-art { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); transform: translateZ(20px); }
-        .song-info { flex-grow: 1; display: flex; flex-direction: column; width: 100%; margin-bottom: 15px; transform: translateZ(10px); }
-        .song-info h3 { font-size: 0.95rem; margin-bottom: 5px; font-weight: 500; color: #fff; }
-        .song-info p { font-size: 0.75rem; color: var(--text-muted); }
-        .streaming-links, .button-container { margin-top: auto; height: 40px; display: flex; align-items: center; justify-content: center; width: 100%; position: relative; z-index: 5; transform: translateZ(30px); }
-        .streaming-links { gap: 10px; }
-        .link-icon { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; color: white; text-decoration: none; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
-        .link-icon:hover { transform: scale(1.1); background: white; color: black; box-shadow: 0 0 15px white; }
-
-        .explore-album-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--accent-color); color: var(--accent-color); padding: 0 20px; height: 36px; border-radius: 30px; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.75rem; cursor: pointer; transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; display: flex; align-items: center; justify-content: center; width: 100%; position: relative; z-index: 100; pointer-events: auto; }
-        .explore-album-btn:hover { background: var(--accent-color); color: white; box-shadow: 0 0 20px var(--accent-glow); }
-
-        /* --- MODAL --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            z-index: 10000; display: flex; justify-content: center; align-items: center;
-            opacity: 0; visibility: hidden; pointer-events: none;
-            will-change: opacity, visibility;
-            transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), visibility 0.4s;
-        }
-        .modal-overlay.active { opacity: 1; visibility: visible; pointer-events: auto; }
-
-        .modal-content {
-            width: 90%; max-width: 450px; background: #0f0f0f;
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 30px;
-            padding: 30px; text-align: left;
-            box-shadow: 0 50px 100px rgba(0,0,0,0.9);
-            transform: scale(0.8) translateY(30px); opacity: 0;
-            will-change: transform, opacity;
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
-        }
-        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); opacity: 1; }
-
-        .close-modal { position: absolute; top: 25px; right: 25px; font-size: 1.5rem; color: rgba(255,255,255,0.3); cursor: pointer; transition: 0.2s; }
-        .close-modal:hover { color: white; text-shadow: 0 0 10px white; }
-        .modal-title { font-size: 1.4rem; color: var(--accent-color); font-weight: 600; margin-bottom: 5px; text-shadow: 0 0 10px rgba(255, 107, 107, 0.3); }
-        .modal-subtitle { font-size: 0.85rem; color: #aaa; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .modal-song-item { display: flex; align-items: center; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 12px; margin-bottom: 12px; border: 1px solid transparent; transition: 0.2s; }
-        .modal-song-item:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1); }
-        .modal-song-img { width: 45px; height: 45px; border-radius: 8px; margin-right: 15px; object-fit: cover; }
-        .modal-song-details-col { flex-grow: 1; }
-        .modal-song-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
-        .modal-song-header h4 { font-size: 0.9rem; font-weight: 500; color: white; }
-        .modal-song-header span { font-size: 0.75rem; color: #888; }
-        .modal-icons-row { display: flex; gap: 8px; }
-
-        .footer-divider { height: 1px; background: rgba(255,255,255,0.1); width: 80%; margin: 30px auto 20px auto; }
-        .social-section-bottom { padding: 10px; display: inline-block; width: 100%; }
-        .bottom-follow-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 15px; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -193,79 +31,120 @@
             <div class="project-subtitle">The Music Project</div>
         </header>
 
-        <div class="artist-section hidden-element">
-            <img src="dp.jpg" alt="Artist" class="artist-avatar">
-            <div class="artist-name-display">
-                Aditya Raj 
-                <i class="fas fa-circle-check verified-icon" title="Verified Artist"></i>
-            </div>
-            <div class="artist-socials">
-                <a href="https://aditya-rajj.github.io/Aditya-raj/" class="social-btn" title="My Website"><i class="fas fa-globe"></i></a>
-                <a href="https://www.instagram.com/_aditya__199?igsh=YnQwZXpteG5meXVj" class="social-btn"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.facebook.com/share/14PZEWWKAG3/" class="social-btn"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://open.spotify.com/artist/0OTaxoblHJk2crI3tZ1K1V?si=Qn4VhqB5SQy1nYkqekboQQ" class="social-btn"><i class="fab fa-spotify"></i></a>
-            </div>
-        </div>
-
-        <h2 class="explore-heading hidden-element">Explore Songs</h2>
-
-        <div class="grid-container">
-            <div class="song-card hidden-element" data-tilt data-tilt-glare data-tilt-max-glare="0.3" data-tilt-max="10">
-                <img src="almost Yours.png" alt="Art" class="album-art">
-                <div class="song-info">
-                    <h3>ALMOST YOURS</h3>
-                    <p>Aditya Raj</p>
-                </div>
-                <div class="button-container">
-                    <button class="explore-album-btn" id="openAlbumBtn">View Album</button>
-                </div>
-            </div>
-
-            <div class="song-card hidden-element" data-tilt data-tilt-glare data-tilt-max-glare="0.3" data-tilt-max="10">
-                <img src="yaddain teri.jpg" alt="Art" class="album-art">
-                <div class="song-info">
-                    <h3>YAADEIN TERI</h3>
-                    <p>Aditya Raj</p>
-                </div>
-                <div class="streaming-links">
-                    <a href="https://open.spotify.com/track/1jP4JquRKRq1ssiE3tHiHe?si=xbfcMX8mSkCDt37VjMHqoA" class="link-icon spotify"><i class="fab fa-spotify"></i></a>
-                    <a href="https://music.youtube.com/watch?v=XBNIGafbKto" class="link-icon yt-music"><i class="fas fa-circle-play"></i></a>
-                    <a href="https://youtu.be/XBNIGafbKto" class="link-icon apple-music"><i class="fab fa-youtube"></i></a>
+        <div class="bento-wrapper">
+            
+            <div class="bento-left">
+                <div class="profile-card hidden-element">
+                    <div class="profile-image-wrapper">
+                        <img src="dp2.jpg" alt="Aditya Raj" class="profile-image">
+                    </div>
+                    
+                    <div class="profile-info">
+                        <div class="profile-name">
+                            Aditya Raj
+                            <svg class="twitter-verified" viewBox="0 0 24 24" aria-label="Verified account" role="img" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M22.5 12.5C22.5 11.04 21.76 9.77 20.61 9.05C20.76 8.6 20.84 8.13 20.84 7.64C20.84 5.43 19.05 3.64 16.84 3.64C16.37 3.64 15.92 3.72 15.5 3.88C14.85 2.55 13.51 1.64 12 1.64C10.49 1.64 9.15 2.55 8.5 3.88C8.08 3.72 7.63 3.64 7.16 3.64C4.95 3.64 3.16 5.43 3.16 7.64C3.16 8.13 3.24 8.6 3.39 9.05C2.24 9.77 1.5 11.04 1.5 12.5C1.5 13.96 2.24 15.23 3.39 15.95C3.24 16.4 3.16 16.87 3.16 17.36C3.16 19.57 4.95 21.36 7.16 21.36C7.63 21.36 8.08 21.28 8.5 21.12C9.15 22.45 10.49 23.36 12 23.36C13.51 23.36 14.85 22.45 15.5 21.12C15.92 21.28 16.37 21.36 16.84 21.36C19.05 21.36 20.84 19.57 20.84 17.36C20.84 16.87 20.76 16.4 20.61 15.95C21.76 15.23 22.5 13.96 22.5 12.5Z" fill="#ffffff"/>
+                                <path d="M10.25 16.75L6 12.5L7.41 11.09L10.25 13.92L16.59 7.58L18 9L10.25 16.75Z" fill="#050505"/>
+                            </svg>
+                        </div>
+                        
+                        <p class="profile-bio">A Musician & Producer focused on creating emotional melodies and intuitive beats.</p>
+                        
+                        <div class="profile-bottom-row">
+                            <div class="profile-socials">
+                                <a href="https://aditya-rajj.github.io/Aditya-raj/" class="link-icon" title="Website"><i class="fas fa-globe"></i></a>
+                                <a href="https://www.instagram.com/_aditya__199?igsh=YnQwZXpteG5meXVj" class="link-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                                <a href="https://www.facebook.com/share/14PZEWWKAG3/" class="link-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                                <a href="https://open.spotify.com/artist/0OTaxoblHJk2crI3tZ1K1V?si=Qn4VhqB5SQy1nYkqekboQQ" class="link-icon" title="Spotify"><i class="fab fa-spotify"></i></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="song-card hidden-element" data-tilt data-tilt-glare data-tilt-max-glare="0.3" data-tilt-max="10">
-                <img src="khwab mere.jpg" alt="Art" class="album-art">
-                <div class="song-info">
-                    <h3>Khwab Mere</h3>
-                    <p>Aditya Raj</p>
+            <div class="bento-right">
+                
+                <h2 class="explore-heading hidden-element">Latest Release</h2>
+                
+                <div class="featured-release-wrapper hidden-element">
+                    <div class="featured-song-card" data-tilt data-tilt-glare data-tilt-max-glare="0.2" data-tilt-max="5">
+                        
+                        <img src="pyar_ho_na_jaye.png" alt="Art" class="featured-album-art">
+                        
+                        <div class="featured-song-info">
+                            <h3 class="featured-title">Pyar Ho Na Jaye</h3>
+                            <p class="featured-artist">Aditya Raj</p>
+                            
+                            <div class="featured-links">
+                                <a href="https://open.spotify.com/album/62bTAp0y8vpAfWr1LwAreg?si=ik4SWTnRT1esjJ7u2filXA" class="link-icon spotify"><i class="fab fa-spotify"></i></a>
+                                <a href="https://music.youtube.com/playlist?list=OLAK5uy_llJD9WsUZ2NkP7oe9dEh_p9lGkcYJcB4U" class="link-icon yt-music"><i class="fas fa-circle-play"></i></a>
+                                <a href="https://youtu.be/JCVuZhWb_-4" class="link-icon apple-music"><i class="fab fa-youtube"></i></a>
+                            </div>
+                        </div>
+                        
+                    </div>
                 </div>
-                <div class="streaming-links">
-                    <a href="https://open.spotify.com/track/2qvP8cmCcmN9gNSYLYJWWx?si=27FUWxsNRWOcSDSFuNNMFA" class="link-icon spotify"><i class="fab fa-spotify"></i></a>
-                    <a href="https://music.youtube.com/watch?v=w10lOxhjKy0" class="link-icon yt-music"><i class="fas fa-circle-play"></i></a>
-                    <a href="https://youtu.be/XBNIGafbKto" class="link-icon apple-music"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
 
-            <div class="song-card hidden-element" data-tilt data-tilt-glare data-tilt-max-glare="0.3" data-tilt-max="10">
-                <img src="dil ki baat.jpg" alt="Art" class="album-art">
-                <div class="song-info">
-                    <h3>Dil Ki Baat</h3>
-                    <p>Aditya Raj</p>
-                </div>
-                <div class="streaming-links">
-                    <a href="https://open.spotify.com/track/0H9lyaDVMOngo2z0wd4dbG?si=L_gTcIKnSxOBS917L1JubA" class="link-icon spotify"><i class="fab fa-spotify"></i></a>
-                    <a href="https://music.youtube.com/watch?v=Ho1yB1bD0qU" class="link-icon yt-music"><i class="fas fa-circle-play"></i></a>
-                    <a href="https://youtu.be/Ho1yB1bD0qU" class="link-icon apple-music"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-        </div>
+                <h2 class="explore-heading hidden-element">More Tracks</h2>
+                
+                <div class="grid-container">
+                    
+                    <div class="song-card hidden-element" data-tilt data-tilt-glare data-tilt-max-glare="0.2" data-tilt-max="10">
+                        <img src="almost Yours.png" alt="Art" class="album-art">
+                        <div class="song-info">
+                            <h3>ALMOST YOURS</h3>
+                            <p>Aditya Raj</p>
+                        </div>
+                        <div class="button-container">
+                            <button class="explore-album-btn" id="openAlbumBtn">View Album</button>
+                        </div>
+                    </div>
 
-        <div class="footer-divider hidden-element"></div>
+                    <div class="song-card hidden-element" data-tilt data-tilt-glare data-tilt-max-glare="0.2" data-tilt-max="10">
+                        <img src="yaddain teri.jpg" alt="Art" class="album-art">
+                        <div class="song-info">
+                            <h3>YAADEIN TERI</h3>
+                            <p>Aditya Raj</p>
+                        </div>
+                        <div class="streaming-links">
+                            <a href="https://open.spotify.com/track/1jP4JquRKRq1ssiE3tHiHe?si=xbfcMX8mSkCDt37VjMHqoA" class="link-icon spotify"><i class="fab fa-spotify"></i></a>
+                            <a href="https://music.youtube.com/watch?v=XBNIGafbKto" class="link-icon yt-music"><i class="fas fa-circle-play"></i></a>
+                            <a href="https://youtu.be/XBNIGafbKto" class="link-icon apple-music"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div> 
+
+                    <div class="song-card hidden-element" data-tilt data-tilt-glare data-tilt-max-glare="0.2" data-tilt-max="10">
+                        <img src="khwab mere.jpg" alt="Art" class="album-art">
+                        <div class="song-info">
+                            <h3>Khwab Mere</h3>
+                            <p>Aditya Raj</p>
+                        </div>
+                        <div class="streaming-links">
+                            <a href="https://open.spotify.com/track/2qvP8cmCcmN9gNSYLYJWWx?si=27FUWxsNRWOcSDSFuNNMFA" class="link-icon spotify"><i class="fab fa-spotify"></i></a>
+                            <a href="https://music.youtube.com/watch?v=w10lOxhjKy0" class="link-icon yt-music"><i class="fas fa-circle-play"></i></a>
+                            <a href="https://youtu.be/XBNIGafbKto" class="link-icon apple-music"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="song-card hidden-element" data-tilt data-tilt-glare data-tilt-max-glare="0.2" data-tilt-max="10">
+                        <img src="dil ki baat.jpg" alt="Art" class="album-art">
+                        <div class="song-info">
+                            <h3>Dil Ki Baat</h3>
+                            <p>Aditya Raj</p>
+                        </div>
+                        <div class="streaming-links">
+                            <a href="https://open.spotify.com/track/0H9lyaDVMOngo2z0wd4dbG?si=L_gTcIKnSxOBS917L1JubA" class="link-icon spotify"><i class="fab fa-spotify"></i></a>
+                            <a href="https://music.youtube.com/watch?v=Ho1yB1bD0qU" class="link-icon yt-music"><i class="fas fa-circle-play"></i></a>
+                            <a href="https://youtu.be/Ho1yB1bD0qU" class="link-icon apple-music"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                    
+                </div> </div> </div> <div class="footer-divider hidden-element"></div>
         <div class="social-section-bottom hidden-element">
-            <div class="artist-socials" style="justify-content: center;">
-                <a href="https://www.instagram.com/_aditya__199?igsh=YnQwZXpteG5meXVj" class="social-btn"><i class="fab fa-instagram"></i></a>
-                <a href="https://x.com/_aditya__199" class="social-btn"><i class="fa-brands fa-x-twitter"></i></a> <a href="https://www.facebook.com/share/1DUjbXxf2f/" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+            <div class="artist-socials" style="justify-content: center; display: flex; gap: 15px;">
+                <a href="https://www.instagram.com/_aditya__199?igsh=YnQwZXpteG5meXVj" class="link-icon"><i class="fab fa-instagram"></i></a>
+                <a href="https://x.com/_aditya__199" class="link-icon"><i class="fa-brands fa-x-twitter"></i></a> 
+                <a href="https://www.facebook.com/share/1DUjbXxf2f/" class="link-icon"><i class="fab fa-facebook-f"></i></a>
             </div>
             <div class="bottom-follow-text">That's All for now — Follow on handles</div>
         </div>
@@ -273,7 +152,7 @@
 
     <div id="albumModal" class="modal-overlay">
         <div class="modal-content">
-            <span class="close-modal" id="closeAlbumBtn">&times;</span>
+            <span class="close-modal" id="closeAlbumBtn">×</span>
             <h2 class="modal-title">ALMOST YOURS</h2>
             <p class="modal-subtitle">EP • Aditya Raj</p>
 
@@ -319,16 +198,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
 
     <script>
-        // --- HAPTIC UTILITY ---
-        // Light vibration helper function (Safe for all browsers)
+        // Haptic utility function
         function triggerHaptic() {
             if ("vibrate" in navigator) {
-                // 10ms is very short, feels like a "click"
                 navigator.vibrate(10);
             }
         }
 
-        // LOADING LOGIC
+        // Loading Logic
         let isLoaded = false;
         function finishLoading() {
             if (isLoaded) return;
@@ -343,16 +220,13 @@
         window.addEventListener('load', finishLoading);
         setTimeout(finishLoading, 3000);
 
-        // SCROLL ANIMATION + HAPTIC
+        // Scroll Animation
         const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('show-element');
-                    
-                    // Trigger Haptic when a new element appears on screen
                     triggerHaptic();
-                    
                     observer.unobserve(entry.target);
                 }
             });
@@ -360,7 +234,7 @@
         const hiddenElements = document.querySelectorAll('.hidden-element');
         hiddenElements.forEach((el) => observer.observe(el));
 
-        // MODAL LOGIC
+        // Modal Logic
         const modal = document.getElementById("albumModal");
         const openBtn = document.getElementById("openAlbumBtn");
         const closeBtn = document.getElementById("closeAlbumBtn");
@@ -369,7 +243,7 @@
             openBtn.addEventListener('click', function(e) {
                 e.preventDefault(); 
                 e.stopPropagation();
-                triggerHaptic(); // Haptic on Open
+                triggerHaptic();
                 requestAnimationFrame(() => {
                     modal.classList.add("active");
                 });
@@ -378,7 +252,7 @@
         
         if(closeBtn) {
             closeBtn.addEventListener('click', function() { 
-                triggerHaptic(); // Haptic on Close
+                triggerHaptic();
                 modal.classList.remove("active"); 
             });
         }
@@ -389,14 +263,13 @@
             }
         });
 
-        // ADD HAPTIC TO ALL BUTTONS AND LINKS
+        // Add haptic to interactive elements
         const allInteractiveElements = document.querySelectorAll('button, a, .social-btn, .link-icon');
         allInteractiveElements.forEach(el => {
             el.addEventListener('click', () => {
                 triggerHaptic();
             });
         });
-
     </script>
 </body>
 </html>
