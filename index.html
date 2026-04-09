@@ -34,9 +34,10 @@
         <div class="bento-wrapper">
             
             <div class="bento-left">
-                <div class="profile-card hidden-element">
+                <div class="profile-card hidden-element" id="artistCard">
                     <div class="profile-image-wrapper">
-                        <img src="dp2.jpg" alt="Aditya Raj" class="profile-image">
+                        <img src="dp3.jpg" alt="Aditya Raj Glow" class="profile-image-glow">
+                        <img src="dp3.jpg" alt="Aditya Raj" class="profile-image">
                     </div>
                     
                     <div class="profile-info">
@@ -67,9 +68,11 @@
                 <h2 class="explore-heading hidden-element">Latest Release</h2>
                 
                 <div class="featured-release-wrapper hidden-element">
-                    <div class="featured-song-card" data-tilt data-tilt-glare data-tilt-max-glare="0.2" data-tilt-max="5">
+                    <div class="featured-song-card" data-tilt data-tilt-glare data-tilt-max-glare="0.2" data-tilt-max="5" crossorigin="anonymous">
                         
-                        <img src="pyar_ho_na_jaye.png" alt="Art" class="featured-album-art">
+                        <div class="featured-album-art-container">
+                            <img src="pyar_ho_na_jaye.png" alt="Art" class="featured-album-art">
+                        </div>
                         
                         <div class="featured-song-info">
                             <h3 class="featured-title">Pyar Ho Na Jaye</h3>
@@ -89,8 +92,10 @@
                 
                 <div class="grid-container">
                     
-                    <div class="song-card hidden-element" data-tilt data-tilt-glare data-tilt-max-glare="0.2" data-tilt-max="10">
-                        <img src="almost Yours.png" alt="Art" class="album-art">
+                    <div class="song-card hidden-element" data-tilt data-tilt-glare data-tilt-max-glare="0.2" data-tilt-max="10" crossorigin="anonymous">
+                        <div class="album-art-container">
+                            <img src="almost Yours.png" alt="Art" class="album-art">
+                        </div>
                         <div class="song-info">
                             <h3>ALMOST YOURS</h3>
                             <p>Aditya Raj</p>
@@ -100,8 +105,10 @@
                         </div>
                     </div>
 
-                    <div class="song-card hidden-element" data-tilt data-tilt-glare data-tilt-max-glare="0.2" data-tilt-max="10">
-                        <img src="yaddain teri.jpg" alt="Art" class="album-art">
+                    <div class="song-card hidden-element" data-tilt data-tilt-glare data-tilt-max-glare="0.2" data-tilt-max="10" crossorigin="anonymous">
+                        <div class="album-art-container">
+                            <img src="yaddain teri.jpg" alt="Art" class="album-art">
+                        </div>
                         <div class="song-info">
                             <h3>YAADEIN TERI</h3>
                             <p>Aditya Raj</p>
@@ -113,8 +120,10 @@
                         </div>
                     </div> 
 
-                    <div class="song-card hidden-element" data-tilt data-tilt-glare data-tilt-max-glare="0.2" data-tilt-max="10">
-                        <img src="khwab mere.jpg" alt="Art" class="album-art">
+                    <div class="song-card hidden-element" data-tilt data-tilt-glare data-tilt-max-glare="0.2" data-tilt-max="10" crossorigin="anonymous">
+                        <div class="album-art-container">
+                            <img src="khwab mere.jpg" alt="Art" class="album-art">
+                        </div>
                         <div class="song-info">
                             <h3>Khwab Mere</h3>
                             <p>Aditya Raj</p>
@@ -126,8 +135,10 @@
                         </div>
                     </div>
 
-                    <div class="song-card hidden-element" data-tilt data-tilt-glare data-tilt-max-glare="0.2" data-tilt-max="10">
-                        <img src="dil ki baat.jpg" alt="Art" class="album-art">
+                    <div class="song-card hidden-element" data-tilt data-tilt-glare data-tilt-max-glare="0.2" data-tilt-max="10" crossorigin="anonymous">
+                        <div class="album-art-container">
+                            <img src="dil ki baat.jpg" alt="Art" class="album-art">
+                        </div>
                         <div class="song-info">
                             <h3>Dil Ki Baat</h3>
                             <p>Aditya Raj</p>
@@ -268,6 +279,60 @@
         allInteractiveElements.forEach(el => {
             el.addEventListener('click', () => {
                 triggerHaptic();
+            });
+        });
+
+        // ==========================================
+        // JS DYNAMIC ALBUM COLOR EXTRACTOR
+        // ==========================================
+        function getAverageColor(imgElement) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            const width = canvas.width = imgElement.naturalWidth || imgElement.width;
+            const height = canvas.height = imgElement.naturalHeight || imgElement.height;
+
+            context.drawImage(imgElement, 0, 0, width, height);
+            
+            let data;
+            try {
+                data = context.getImageData(0, 0, width, height).data;
+            } catch (e) {
+                return 'rgba(255, 255, 255, 0.15)'; 
+            }
+
+            let r = 0, g = 0, b = 0;
+            let count = 0;
+
+            for (let i = 0; i < data.length; i += 40) {
+                r += data[i];     
+                g += data[i + 1]; 
+                b += data[i + 2]; 
+                count++;
+            }
+
+            r = Math.floor(r / count);
+            g = Math.floor(g / count);
+            b = Math.floor(b / count);
+
+            return `rgba(${r}, ${g}, ${b}, 0.5)`; 
+        }
+
+        window.addEventListener('load', () => {
+            const allCards = document.querySelectorAll('.song-card, .featured-song-card');
+            
+            allCards.forEach(card => {
+                const img = card.querySelector('img');
+                if(img) {
+                    if(img.complete) {
+                        const color = getAverageColor(img);
+                        card.style.setProperty('--dynamic-glow', color);
+                    } else {
+                        img.addEventListener('load', () => {
+                            const color = getAverageColor(img);
+                            card.style.setProperty('--dynamic-glow', color);
+                        });
+                    }
+                }
             });
         });
     </script>
