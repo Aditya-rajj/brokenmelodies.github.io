@@ -98,7 +98,7 @@ h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 600; text-transform: up
 }
 .profile-name, .profile-bio { position: relative; z-index: 2; }
 .profile-name { font-size: 1.65rem; font-weight: 500; color: #ffffff; display: flex; align-items: center; gap: 8px; margin-bottom: 12px; letter-spacing: 0.5px; }
-.profile-bio { font-size: 0.95rem; color: rgba(255, 255, 255, 0.8); line-height: 1.6; margin-bottom: 25px; font-weight: 300; }
+.profile-bio { font-size: 0.85rem; color: rgba(255, 255, 255, 0.8); line-height: 1.6; margin-bottom: 25px; font-weight: 300; }
 .profile-bottom-row { position: relative; z-index: 2; display: flex; justify-content: flex-start; align-items: center; width: 100%; padding-top: 10px; padding-bottom: 10px; }
 .profile-socials { display: flex; gap: 12px; }
 .twitter-verified { width: 22px; height: 22px; margin-left: 6px; flex-shrink: 0; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3)); }
@@ -274,4 +274,4 @@ h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 600; text-transform: up
     .grid-container { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .song-card { padding: 12px; }
     .song-info h3 { font-size: 0.85rem; }
-}
+                                                          }
